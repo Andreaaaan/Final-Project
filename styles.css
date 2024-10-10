@@ -1,0 +1,73 @@
+/* Mengatur font dan background */
+body {
+    font-family: 'Karla', sans-serif;
+    background-color: darkblue;
+    color: white;
+}
+
+img {
+    max-width: 100%;  /* Membatasi ukuran gambar agar tidak melebihi lebar kolom */
+    height: auto;     /* Menjaga proporsi gambar */
+    margin-bottom: 20px; /* Menambahkan jarak bawah di bawah gambar */
+    border-radius: 30px;  /* Membuat sudut gambar melengkung */
+}
+
+h1 {
+    font-family: 'Poppins', sans-serif; /* Menggunakan font Poppins */
+    font-size: 3em; /* Mengatur ukuran huruf yang lebih besar */
+    text-align: center; /* Memusatkan judul */
+    color: #ffffff; /* Warna teks putih */
+    margin-top: 20px; /* Menambahkan jarak atas */
+    margin-bottom: 30px; /* Menambahkan jarak bawah antara judul dan gambar */
+    letter-spacing: 2px; /* Menambahkan jarak antar huruf */
+}
+
+.contact-info {
+    line-height: 1.8;    /* Menambah jarak antar baris untuk kontak */
+    text-align: left;  /* Memastikan teks sejajar ke kiri */
+}
+
+/* Merapikan tampilan link */
+a {
+    color: white;
+    text-decoration: none !important; /* Menghapus garis bawah pada tautan */
+}
+
+a:hover {
+    color: lightskyblue;      
+    transition: 0.3s;      
+}
+
+/* Styling khusus untuk email */
+.email-link:hover {
+    color: lightskyblue;
+    transition: 0.3s;
+}
+
+/* Styling khusus untuk LinkedIn */
+.linkedin-link:hover {
+    color: lightblue;
+    transition: 0.3s;
+}
+
+/* Styling responsif untuk layar kecil (mobile) */
+@media (max-width: 600px) {
+    h1 {
+        font-size: 2em; /* Mengurangi ukuran font pada layar kecil */
+    }
+    
+    img {
+        max-width: 100%; /* Gambar memenuhi lebar layar di perangkat kecil */
+        margin-bottom: 15px; /* Jarak bawah di layar kecil */
+        border-radius: 30px;
+    }
+
+    .contact-info {
+        padding-left: 0px; /* Menghilangkan padding untuk layar kecil */
+    }
+
+    /* Menyesuaikan ukuran teks agar lebih proporsional di layar kecil */
+    h2, h3, p {
+        font-size: 1em;
+    }
+}
