@@ -16,9 +16,8 @@ load_css("styles.css")
 st.sidebar.title("Navigation")
 page = st.sidebar.selectbox(
     "Menu",
-    ["About Me", "Customer Segmentation with ML"]
+    ["About Me", "Customer Segmentation with XGboost and Random Forest", "Customer Segmentation With Gradient Boosting", "Customer Segmentation Using Unsupervised Learning"]
 )
-
 # Switch Page based on selection
 if page == "About Me":
     # Menampilkan judul yang dipusatkan menggunakan CSS
@@ -99,7 +98,7 @@ if page == "About Me":
         ]
     st.write(", ".join(education))
 
-elif page == "Customer Segmentation with ML":
+elif page == "Customer Segmentation with XGboost and Random Forest":
     # Customer Segmentation with Machine Learning
     st.title("Aplikasi Prediksi Customer Segmentation dengan Random Forest dan XGBoost")
 
@@ -151,13 +150,13 @@ elif page == "Customer Segmentation with ML":
     # Fungsi untuk memberikan keterangan segmen pelanggan
     def get_customer_segment_description(segment):
         if segment == 0:
-            return "Segmen 0: Pelanggan Hemat - Pelanggan yang sangat peka terhadap harga dan promosi."
+            return "Segmen 0: Pelanggan Premium - Pelanggan Premium - Pelanggan bernilai tinggi yang lebih mengutamakan kualitas dan layanan premium."
         elif segment == 1:
-            return "Segmen 1: Pelanggan Potensial - Pelanggan baru yang menunjukkan minat namun belum sering membeli."
+            return "Segmen 1: Pelanggan Setia - Pelanggan yang sudah sering melakukan pembelian dan loyal."
         elif segment == 2:
-            return "Segmen 2: Pelanggan Setia - Pelanggan yang sudah sering melakukan pembelian dan loyal."
+            return "Segmen 2: Pelanggan Potensial - Pelanggan baru yang menunjukkan minat namun belum sering membeli."
         elif segment == 3:
-            return "Segmen 3: Pelanggan Premium - Pelanggan bernilai tinggi yang lebih mengutamakan kualitas dan layanan premium."
+            return "Segmen 3: Pelanggan Hemat - Pelanggan yang sangat peka terhadap harga dan promosi."
         else:
             return "Segmen tidak dikenal."
 
@@ -172,3 +171,120 @@ elif page == "Customer Segmentation with ML":
         prediction_xgb = xgb_model.predict([features])[0]
         st.write(f'Prediksi XGBoost: {prediction_xgb}')
         st.write(get_customer_segment_description(prediction_xgb))
+elif page == "Customer Segmentation Using Unsupervised Learning":
+    st.title("Customer Segmentation Using Unsupervised Learning (KMeans)")
+
+    kmeans_model = joblib.load('kmeans_model.pkl')
+    scaler = joblib.load('scaler.pkl')
+
+    # Streamlit page
+    st.title("Customer Segmentation Using Unsupervised Learning (KMeans)")
+
+    # Sidebar inputs for 6 features
+    age = st.slider("Age", 18, 100, 30)
+    work_experience = st.slider("Work Experience (Years)", 0, 40, 5)
+    family_size = st.slider("Family Size", 1, 10, 3)
+    gender = st.selectbox("Gender", ("Male", "Female"))
+    ever_married = st.selectbox("Ever Married", ("Yes", "No"))
+    spending_score = st.selectbox("Spending Score", ("Low", "High"))
+
+    # Encode categorical features
+    gender_encoded = 1 if gender == "Male" else 0
+    ever_married_encoded = 1 if ever_married == "Yes" else 0
+    spending_score_encoded = 1 if spending_score == "High" else 0
+
+    # Combine all features into a single array
+    features = [age, work_experience, family_size, gender_encoded, ever_married_encoded, spending_score_encoded]
+    input_data = np.array(features).reshape(1, -1)
+
+    # Standardize the input data using the loaded scaler
+    input_data_scaled = scaler.transform(input_data)
+
+    # Predict the cluster using the KMeans model
+    cluster = kmeans_model.predict(input_data_scaled)[0]
+
+    # Map the cluster to segment labels (A, B, C, D)
+    cluster_to_segment = {0: 'A', 1: 'B', 2: 'C', 3: 'D'}
+    segment = cluster_to_segment.get(cluster, "Unknown")
+
+    # Display the segment prediction
+    st.write(f"The predicted customer segment is: **Segment {segment}**")
+
+    # Segment descriptions
+    def get_segment_description(segment):
+        descriptions = {
+            'A': "Segment A: Price-sensitive customers who are responsive to promotions and discounts.",
+            'B': "Segment B: Potential customers who show interest but don't purchase frequently.",
+            'C': "Segment C: Loyal customers who make regular purchases.",
+            'D': "Segment D: High-value customers who prioritize quality and premium services."
+        }
+        return descriptions.get(segment, "Unknown segment")
+
+    # Display the segment description
+    st.write(get_segment_description(segment))
+
+elif page == "Customer Segmentation With Gradient Boosting":
+    st.title("Customer Segmentation with Gradient Boosting")
+
+    # Load the Gradient Boosting model
+    gb_model = joblib.load('gradient_boosting_model.pkl')
+
+    # Definisikan encoder untuk setiap fitur kategorikal
+    gender_encoder = LabelEncoder()
+    gender_encoder.classes_ = np.array(['Female', 'Male'])
+
+    married_encoder = LabelEncoder()
+    married_encoder.classes_ = np.array(['No', 'Yes'])
+
+    graduated_encoder = LabelEncoder()
+    graduated_encoder.classes_ = np.array(['No', 'Yes'])
+
+    profession_encoder = LabelEncoder()
+    profession_encoder.classes_ = np.array(['Artist', 'Doctor', 'Engineer', 'Entertainment', 'Healthcare', 'Lawyer'])
+
+    spending_score_encoder = LabelEncoder()
+    spending_score_encoder.classes_ = np.array(['Low', 'Average', 'High'])
+
+    var_1_encoder = LabelEncoder()
+    var_1_encoder.classes_ = np.array(['Cat_1', 'Cat_2', 'Cat_3', 'Cat_4', 'Cat_5', 'Cat_6', 'Cat_7'])
+
+    # Input dari pengguna
+    gender = st.selectbox("Jenis Kelamin", ('Male', 'Female'))
+    ever_married = st.selectbox("Pernah Menikah", ('Yes', 'No'))
+    age = st.number_input("Umur", min_value=18, max_value=100, value=30)
+    graduated = st.selectbox("Lulusan Universitas", ('Yes', 'No'))
+    profession = st.selectbox("Profesi", ('Artist', 'Doctor', 'Engineer', 'Entertainment', 'Healthcare', 'Lawyer'))
+    work_experience = st.number_input("Pengalaman Kerja (Tahun)", min_value=0, max_value=40, value=5)
+    spending_score = st.selectbox("Spending Score", ('Low', 'Average', 'High'))
+    family_size = st.number_input("Ukuran Keluarga", min_value=1, max_value=10, value=3)
+    var_1 = st.selectbox("Kategori Var_1", ('Cat_1', 'Cat_2', 'Cat_3', 'Cat_4', 'Cat_5', 'Cat_6', 'Cat_7'))
+
+    # Encode input
+    gender_encoded = gender_encoder.transform([gender])[0]
+    married_encoded = married_encoder.transform([ever_married])[0]
+    graduated_encoded = graduated_encoder.transform([graduated])[0]
+    profession_encoded = profession_encoder.transform([profession])[0]
+    spending_score_encoded = spending_score_encoder.transform([spending_score])[0]
+    var_1_encoded = var_1_encoder.transform([var_1])[0]
+
+    # Combine all features into an array
+    features = [gender_encoded, married_encoded, age, graduated_encoded, profession_encoded, work_experience, spending_score_encoded, family_size, var_1_encoded]
+
+    # Fungsi untuk memberikan keterangan segmen pelanggan
+    def get_customer_segment_description(segment):
+        if segment == 0:
+            return "Segmen A: Pelanggan Premium - Pelanggan bernilai tinggi yang lebih mengutamakan kualitas dan layanan premium."
+        elif segment == 1:
+            return "Segmen B: Pelanggan Setia - Pelanggan yang sudah sering melakukan pembelian dan loyal."
+        elif segment == 2:
+            return "Segmen C: Pelanggan Potensial - Pelanggan baru yang menunjukkan minat namun belum sering membeli."
+        elif segment == 3:
+            return "Segmen D: Pelanggan Hemat - Pelanggan yang sangat peka terhadap harga dan promosi."
+        else:
+            return "Segmen tidak dikenal."
+
+    # Prediksi menggunakan model Gradient Boosting
+    if st.button('Prediksi dengan Gradient Boosting'):
+        prediction_gb = gb_model.predict([features])[0]
+        st.write(f'Prediksi Gradient Boosting: {prediction_gb}')
+        st.write(get_customer_segment_description(prediction_gb))
