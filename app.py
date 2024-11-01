@@ -16,7 +16,7 @@ load_css("styles.css")
 st.sidebar.title("Navigation")
 page = st.sidebar.selectbox(
     "Menu",
-    ["About Me", "Customer Segmentation with XGboost and Random Forest", "Customer Segmentation With Gradient Boosting", "Customer Segmentation Using Unsupervised Learning"]
+    ["About Me", "Customer Segmentation with XGboost and Random Forest", "Customer Segmentation With Gradient Boosting"]
 )
 # Switch Page based on selection
 if page == "About Me":
@@ -171,57 +171,6 @@ elif page == "Customer Segmentation with XGboost and Random Forest":
         prediction_xgb = xgb_model.predict([features])[0]
         st.write(f'Prediksi XGBoost: {prediction_xgb}')
         st.write(get_customer_segment_description(prediction_xgb))
-elif page == "Customer Segmentation Using Unsupervised Learning":
-    st.title("Customer Segmentation Using Unsupervised Learning (KMeans)")
-
-    kmeans_model = joblib.load('kmeans_model.pkl')
-    scaler = joblib.load('scaler.pkl')
-
-    # Streamlit page
-    st.title("Customer Segmentation Using Unsupervised Learning (KMeans)")
-
-    # Sidebar inputs for 6 features
-    age = st.slider("Age", 18, 100, 30)
-    work_experience = st.slider("Work Experience (Years)", 0, 40, 5)
-    family_size = st.slider("Family Size", 1, 10, 3)
-    gender = st.selectbox("Gender", ("Male", "Female"))
-    ever_married = st.selectbox("Ever Married", ("Yes", "No"))
-    spending_score = st.selectbox("Spending Score", ("Low", "High"))
-
-    # Encode categorical features
-    gender_encoded = 1 if gender == "Male" else 0
-    ever_married_encoded = 1 if ever_married == "Yes" else 0
-    spending_score_encoded = 1 if spending_score == "High" else 0
-
-    # Combine all features into a single array
-    features = [age, work_experience, family_size, gender_encoded, ever_married_encoded, spending_score_encoded]
-    input_data = np.array(features).reshape(1, -1)
-
-    # Standardize the input data using the loaded scaler
-    input_data_scaled = scaler.transform(input_data)
-
-    # Predict the cluster using the KMeans model
-    cluster = kmeans_model.predict(input_data_scaled)[0]
-
-    # Map the cluster to segment labels (A, B, C, D)
-    cluster_to_segment = {0: 'A', 1: 'B', 2: 'C', 3: 'D'}
-    segment = cluster_to_segment.get(cluster, "Unknown")
-
-    # Display the segment prediction
-    st.write(f"The predicted customer segment is: **Segment {segment}**")
-
-    # Segment descriptions
-    def get_segment_description(segment):
-        descriptions = {
-            'A': "Segment A: Price-sensitive customers who are responsive to promotions and discounts.",
-            'B': "Segment B: Potential customers who show interest but don't purchase frequently.",
-            'C': "Segment C: Loyal customers who make regular purchases.",
-            'D': "Segment D: High-value customers who prioritize quality and premium services."
-        }
-        return descriptions.get(segment, "Unknown segment")
-
-    # Display the segment description
-    st.write(get_segment_description(segment))
 
 elif page == "Customer Segmentation With Gradient Boosting":
     st.title("Customer Segmentation with Gradient Boosting")
