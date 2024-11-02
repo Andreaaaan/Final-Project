@@ -264,7 +264,8 @@ elif page == "Prediction Test Covid-19 using Machine Learning":
         "Fatigue", "Gastrointestinal", "Abroad travel", "Contact with COVID Patient", 
         "Attended Large Gathering", "Visited Public Exposed Places", 
         "Family working in Public Exposed Places", "Wearing Masks", 
-        "Sanitization from Market"
+        "Sanitization from Market",
+        "Pernah Kontak dengan Pasien"  # Fitur tambahan (sesuaikan dengan fitur yang hilang)
     ]
 
     # Mendapatkan input dari pengguna dan encode ke 1 atau 0
