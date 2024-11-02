@@ -16,7 +16,8 @@ load_css("styles.css")
 st.sidebar.title("Navigation")
 page = st.sidebar.selectbox(
     "Menu",
-    ["About Me", "Customer Segmentation with XGboost and Random Forest", "Customer Segmentation With Gradient Boosting"]
+    ["About Me", "Customer Segmentation with XGboost and Random Forest", 
+     "Customer Segmentation With Gradient Boosting", "Prediction Test Covid-19 using Machine Learning"]
 )
 # Switch Page based on selection
 if page == "About Me":
@@ -237,3 +238,34 @@ elif page == "Customer Segmentation With Gradient Boosting":
         prediction_gb = gb_model.predict([features])[0]
         st.write(f'Prediksi Gradient Boosting: {prediction_gb}')
         st.write(get_customer_segment_description(prediction_gb))
+elif page == "Prediction Test Covid-19 using Machine Learning":
+    # Halaman untuk prediksi COVID-19
+    st.title("COVID-19 Prediction Test using Machine Learning")
+    
+    # Load model
+    model = load_model()
+
+    # Input pertanyaan Yes/No dari pengguna
+    st.subheader("Jawab pertanyaan berikut dengan Yes atau No")
+
+    questions = [
+        "Breathing Problem", "Fever", "Dry Cough", "Sore throat", "Running Nose", 
+        "Asthma", "Chronic Lung Disease", "Headache", "Heart Disease", "Diabetes", 
+        "Fatigue", "Gastrointestinal", "Abroad travel", "Contact with COVID Patient", 
+        "Attended Large Gathering", "Visited Public Exposed Places", 
+        "Family working in Public Exposed Places", "Wearing Masks", 
+        "Sanitization from Market"
+    ]
+
+    # Mendapatkan input dari pengguna
+    user_input = []
+    for question in questions:
+        answer = st.selectbox(question, ['Yes', 'No'])
+        user_input.append(1 if answer == 'Yes' else 0)
+
+    # Prediksi jika tombol ditekan
+    if st.button("Predict COVID-19"):
+        prediction = model.predict([user_input])
+        result = 'Positive' if prediction[0] == 1 else 'Negative'
+        
+        st.write(f"The prediction result is: **{result}**")
