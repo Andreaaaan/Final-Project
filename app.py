@@ -258,6 +258,7 @@ elif page == "Prediction Test Covid-19 using Machine Learning":
     # Input pertanyaan Yes/No dari pengguna
     st.subheader("Jawab pertanyaan berikut dengan memilih Yes atau No")
 
+    # Mendefinisikan pertanyaan
     questions = [
         "Breathing Problem", "Fever", "Dry Cough", "Sore throat", "Running Nose", 
         "Asthma", "Chronic Lung Disease", "Headache", "Heart Disease", "Diabetes", 
@@ -268,14 +269,14 @@ elif page == "Prediction Test Covid-19 using Machine Learning":
         "Pernah Kontak dengan Pasien"  # Fitur tambahan untuk melengkapi 20 fitur
     ]
 
-    # Mendapatkan input dari pengguna dengan dua kolom
+    # Mendapatkan input dari pengguna dengan dua kolom yang lebih rapi
     user_input = []
     for question in questions:
-        col1, col2 = st.columns(2)
+        col1, col2 = st.columns([2, 1])  # Kolom pertama lebih lebar untuk pertanyaan
         with col1:
-            st.write(question)
+            st.write(f"**{question}**")  # Tampilkan pertanyaan dalam huruf tebal
         with col2:
-            answer = st.radio("", ['Yes', 'No'], key=question)  # Menggunakan radio button untuk Yes/No
+            answer = st.radio("", ['Yes', 'No'], key=question, index=1, horizontal=True)  # Pilihan Yes/No dalam satu baris
             encoded_answer = label_encoder.transform([answer])[0]  # Encode ke 1 untuk 'Yes' dan 0 untuk 'No'
             user_input.append(encoded_answer)
 
@@ -287,7 +288,7 @@ elif page == "Prediction Test Covid-19 using Machine Learning":
         try:
             prediction = model.predict([user_input])
             result = 'Positive' if prediction[0] == 1 else 'Negative'
-            st.write(f"The prediction result is: **{result}**")
+            st.success(f"The prediction result is: **{result}**")  # Gunakan st.success untuk hasil positif
         except ValueError as e:
             st.error(f"Error: {e}")
             st.write("Pastikan jumlah fitur input sesuai dengan model yang digunakan.")
