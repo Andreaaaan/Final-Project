@@ -242,7 +242,11 @@ elif page == "Prediction Test Covid-19 using Machine Learning":
     # Halaman untuk prediksi COVID-19
     st.title("COVID-19 Prediction Test using Machine Learning")
     
-    # Load model
+    # Load model hanya di bagian ini
+    @st.cache
+    def load_model():
+        return joblib.load('model_parallel.pkl')
+    
     model = load_model()
 
     # Input pertanyaan Yes/No dari pengguna
