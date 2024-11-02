@@ -269,16 +269,14 @@ elif page == "Prediction Test Covid-19 using Machine Learning":
         "Pernah Kontak dengan Pasien"  # Fitur tambahan untuk melengkapi 20 fitur
     ]
 
-    # Mendapatkan input dari pengguna dengan dua kolom yang lebih rapi
+    # Mendapatkan input dari pengguna dengan satu kolom di bawah pertanyaan
     user_input = []
     for question in questions:
-        col1, col2 = st.columns([2, 1])  # Kolom pertama lebih lebar untuk pertanyaan
-        with col1:
-            st.write(f"**{question}**")  # Tampilkan pertanyaan dalam huruf tebal
-        with col2:
-            answer = st.radio("", ['Yes', 'No'], key=question, index=1, horizontal=True)  # Pilihan Yes/No dalam satu baris
-            encoded_answer = label_encoder.transform([answer])[0]  # Encode ke 1 untuk 'Yes' dan 0 untuk 'No'
-            user_input.append(encoded_answer)
+        st.write(f"**{question}**")  # Tampilkan pertanyaan dalam huruf tebal
+        answer = st.radio("", ['Yes', 'No'], key=question, index=1, horizontal=True)  # Pilihan Yes/No di bawah pertanyaan
+        encoded_answer = label_encoder.transform([answer])[0]  # Encode ke 1 untuk 'Yes' dan 0 untuk 'No'
+        user_input.append(encoded_answer)
+        st.write("")  # Tambahkan spasi kosong untuk memberi jarak antar pertanyaan
 
     # Debugging: Print jumlah fitur
     st.write(f"Input features count: {len(user_input)}")
