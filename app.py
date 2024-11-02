@@ -269,7 +269,7 @@ elif page == "Prediction Test Covid-19 using Machine Learning":
         "Pernah Kontak dengan Pasien"  # Fitur tambahan untuk melengkapi 20 fitur
     ]
 
-    # Mendapatkan input dari pengguna dengan tampilan rapi dan spasi antar pertanyaan
+    # Mendapatkan input dari pengguna dengan tampilan rapi, spasi, dan garis pembatas antar pertanyaan
     user_input = []
     for question in questions:
         # Display the question and Yes/No radio button in one row
@@ -281,8 +281,8 @@ elif page == "Prediction Test Covid-19 using Machine Learning":
             encoded_answer = label_encoder.transform([answer])[0]  # Encode Yes/No as 1/0
             user_input.append(encoded_answer)
         
-        # Add spacing between questions
-        st.write("")  # Adds blank space between questions for better readability
+        # Add horizontal line between questions
+        st.markdown("<hr>", unsafe_allow_html=True)  # Adds horizontal line
 
     # Prediksi jika tombol ditekan
     if st.button("Predict COVID-19"):
