@@ -256,7 +256,7 @@ elif page == "Prediction Test Covid-19 using Machine Learning":
     label_encoder.fit(['Yes', 'No'])  # Fit the encoder with 'Yes' and 'No' labels
 
     # Input pertanyaan Yes/No dari pengguna
-    st.subheader("Jawab pertanyaan berikut dengan Yes atau No")
+    st.subheader("Jawab pertanyaan berikut dengan memilih Yes atau No")
 
     questions = [
         "Breathing Problem", "Fever", "Dry Cough", "Sore throat", "Running Nose", 
@@ -265,15 +265,19 @@ elif page == "Prediction Test Covid-19 using Machine Learning":
         "Attended Large Gathering", "Visited Public Exposed Places", 
         "Family working in Public Exposed Places", "Wearing Masks", 
         "Sanitization from Market",
-        "Pernah Kontak dengan Pasien"  # Fitur tambahan (sesuaikan dengan fitur yang hilang)
+        "Pernah Kontak dengan Pasien"  # Fitur tambahan untuk melengkapi 20 fitur
     ]
 
-    # Mendapatkan input dari pengguna dan encode ke 1 atau 0
+    # Mendapatkan input dari pengguna dengan dua kolom
     user_input = []
     for question in questions:
-        answer = st.selectbox(question, ['Yes', 'No'])
-        encoded_answer = label_encoder.transform([answer])[0]  # Encode to 1 for 'Yes' and 0 for 'No'
-        user_input.append(encoded_answer)
+        col1, col2 = st.columns(2)
+        with col1:
+            st.write(question)
+        with col2:
+            answer = st.radio("", ['Yes', 'No'], key=question)  # Menggunakan radio button untuk Yes/No
+            encoded_answer = label_encoder.transform([answer])[0]  # Encode ke 1 untuk 'Yes' dan 0 untuk 'No'
+            user_input.append(encoded_answer)
 
     # Debugging: Print jumlah fitur
     st.write(f"Input features count: {len(user_input)}")
