@@ -269,24 +269,27 @@ elif page == "Prediction Test Covid-19 using Machine Learning":
         "Pernah Kontak dengan Pasien"  # Fitur tambahan untuk melengkapi 20 fitur
     ]
 
-    # Mendapatkan input dari pengguna dengan satu kolom di bawah pertanyaan
+    # Mendapatkan input dari pengguna dengan tampilan rapi dan spasi antar pertanyaan
     user_input = []
     for question in questions:
-        st.write(f"**{question}**")  # Tampilkan pertanyaan dalam huruf tebal
-        answer = st.radio("", ['Yes', 'No'], key=question, index=1, horizontal=True)  # Pilihan Yes/No di bawah pertanyaan
-        encoded_answer = label_encoder.transform([answer])[0]  # Encode ke 1 untuk 'Yes' dan 0 untuk 'No'
-        user_input.append(encoded_answer)
-        st.write("")  # Tambahkan spasi kosong untuk memberi jarak antar pertanyaan
+        # Display the question and Yes/No radio button in one row
+        col1, col2 = st.columns([3, 1])  # Adjust columns to make question and options aligned
+        with col1:
+            st.write(f"**{question}**")  # Display the question
+        with col2:
+            answer = st.radio("", ['Yes', 'No'], key=question, horizontal=True)  # Yes/No options next to question
+            encoded_answer = label_encoder.transform([answer])[0]  # Encode Yes/No as 1/0
+            user_input.append(encoded_answer)
+        
+        # Add spacing between questions
+        st.write("")  # Adds blank space between questions for better readability
 
-    # Debugging: Print jumlah fitur
-    st.write(f"Input features count: {len(user_input)}")
-    
     # Prediksi jika tombol ditekan
     if st.button("Predict COVID-19"):
         try:
             prediction = model.predict([user_input])
             result = 'Positive' if prediction[0] == 1 else 'Negative'
-            st.success(f"The prediction result is: **{result}**")  # Gunakan st.success untuk hasil positif
+            st.success(f"The prediction result is: **{result}**")  # Display result
         except ValueError as e:
             st.error(f"Error: {e}")
             st.write("Pastikan jumlah fitur input sesuai dengan model yang digunakan.")
