@@ -238,6 +238,8 @@ elif page == "Customer Segmentation With Gradient Boosting":
         prediction_gb = gb_model.predict([features])[0]
         st.write(f'Prediksi Gradient Boosting: {prediction_gb}')
         st.write(get_customer_segment_description(prediction_gb))
+
+
 elif page == "Prediction Test Covid-19 using Machine Learning":
     # Halaman untuk prediksi COVID-19
     st.title("COVID-19 Prediction Test using Machine Learning")
@@ -248,6 +250,10 @@ elif page == "Prediction Test Covid-19 using Machine Learning":
         return joblib.load('model_parallel.pkl')
     
     model = load_model()
+
+    # Define the encoder
+    label_encoder = LabelEncoder()
+    label_encoder.fit(['Yes', 'No'])  # Fit the encoder with 'Yes' and 'No' labels
 
     # Input pertanyaan Yes/No dari pengguna
     st.subheader("Jawab pertanyaan berikut dengan Yes atau No")
@@ -261,15 +267,22 @@ elif page == "Prediction Test Covid-19 using Machine Learning":
         "Sanitization from Market"
     ]
 
-    # Mendapatkan input dari pengguna
+    # Mendapatkan input dari pengguna dan encode ke 1 atau 0
     user_input = []
     for question in questions:
         answer = st.selectbox(question, ['Yes', 'No'])
-        user_input.append(1 if answer == 'Yes' else 0)
+        encoded_answer = label_encoder.transform([answer])[0]  # Encode to 1 for 'Yes' and 0 for 'No'
+        user_input.append(encoded_answer)
 
+    # Debugging: Print jumlah fitur
+    st.write(f"Input features count: {len(user_input)}")
+    
     # Prediksi jika tombol ditekan
     if st.button("Predict COVID-19"):
-        prediction = model.predict([user_input])
-        result = 'Positive' if prediction[0] == 1 else 'Negative'
-        
-        st.write(f"The prediction result is: **{result}**")
+        try:
+            prediction = model.predict([user_input])
+            result = 'Positive' if prediction[0] == 1 else 'Negative'
+            st.write(f"The prediction result is: **{result}**")
+        except ValueError as e:
+            st.error(f"Error: {e}")
+            st.write("Pastikan jumlah fitur input sesuai dengan model yang digunakan.")
